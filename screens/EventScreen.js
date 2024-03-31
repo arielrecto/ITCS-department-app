@@ -22,7 +22,6 @@ import FontAwesomeSix from "react-native-vector-icons/FontAwesome6";
 import RadioButtonsGroup, {
   RadioButton,
 } from "react-native-radio-buttons-group";
-import { Avatar } from "react-native-elements";
 
 export default function EventDetailsScreen({ route }) {
   const { eventId } = route.params;
