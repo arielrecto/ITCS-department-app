@@ -10,7 +10,6 @@ import {
 import Colors from "../constants/Colors";
 import FormTextInput from "../components/FormTextInput";
 import { useState } from "react";
-import axios from "./../utils/axios";
 import { login } from "./../services/authService";
 
 export default function ({ navigation }) {

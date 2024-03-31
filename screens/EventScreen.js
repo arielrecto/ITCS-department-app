@@ -19,9 +19,7 @@ import formatDate from "./../utils/formatDate";
 import formatDateWithoutHours from "../utils/formatDateWithoutHours";
 import RenderHTML from "react-native-render-html";
 import FontAwesomeSix from "react-native-vector-icons/FontAwesome6";
-import RadioButtonsGroup, {
-  RadioButton,
-} from "react-native-radio-buttons-group";
+import RadioButtonsGroup from "react-native-radio-buttons-group";
 
 export default function EventDetailsScreen({ route }) {
   const { eventId } = route.params;

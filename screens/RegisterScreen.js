@@ -9,7 +9,6 @@ import {
 import SelectDropDown from "react-native-select-dropdown";
 import Colors from "../constants/Colors";
 import FormTextInput from "../components/FormTextInput";
-import DocumentPicker from "react-native-document-picker";
 import { useState } from "react";
 import axios from "axios";
 
