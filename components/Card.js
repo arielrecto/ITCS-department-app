@@ -1,11 +1,22 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import Colors from "./../constants/Colors";
 
-
-export default function ({ title, icon, contentCount = 0}) {
+export default function ({
+  title,
+  icon,
+  contentCount = 0,
+  bgColor = Colors.accent,
+}) {
   return (
     <>
-      <View style={styles.container}>
+      <View
+        style={{
+          backgroundColor: bgColor,
+          padding: 20,
+          margin: 10,
+          borderRadius: 10,
+        }}
+      >
         <View style={styles.titleWrapper}>
           {icon}
           <Text style={styles.title}>{title}</Text>
@@ -17,17 +28,11 @@ export default function ({ title, icon, contentCount = 0}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: Colors.accent,
-    padding: 20,
-    margin: 10,
-    borderRadius: 10,
-  },
   titleWrapper: {
-    display : "flex",
-    flexDirection : "row",
-    alignItems : "center",
-    gap : 15
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
   },
   title: {
     color: Colors.base,

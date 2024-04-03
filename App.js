@@ -70,6 +70,7 @@ export default function App() {
               <Stack.Screen name="home"
                 component={HomeScreen}
                 options={{
+                  title : "Home",
                   headerRight: () => (
                     <Pressable onPress={() => logoutAction()}>
                       <MaterialICon name="logout" size={22} />
@@ -81,6 +82,7 @@ export default function App() {
                 name="Event List"
                 component={EventListScreen}
                 options={{
+                  title : "Events",
                   headerRight: () => (
                     <Pressable onPress={() => logoutAction()}>
                       <MaterialICon name="logout" size={22} />
@@ -92,6 +94,7 @@ export default function App() {
                 name="Event"
                 component={EventScreen}
                 options={{
+                  title : "Event",
                   headerRight: () => (
                     <Pressable onPress={() => logoutAction()}>
                       <MaterialICon name="logout" size={22} />
@@ -104,6 +107,7 @@ export default function App() {
                 name="announcements"
                 component={AnnouncementListScreen}
                 options={{
+                  title : "Announcements",
                   headerRight: () => (
                     <Pressable onPress={() => logoutAction()}>
                       <MaterialICon name="logout" size={22} />
@@ -115,6 +119,7 @@ export default function App() {
                 name="announcement"
                 component={AnnouncementScreen}
                 options={{
+                  title : "Announcement",
                   headerRight: () => (
                     <Pressable onPress={() => logoutAction()}>
                       <MaterialICon name="logout" size={22} />

@@ -56,6 +56,7 @@ export default function ({ navigation }) {
             />
           }
           contentCount={dashboard?.total_announcement}
+          bgColor={Colors.neutral}
         />
       </Pressable>
 

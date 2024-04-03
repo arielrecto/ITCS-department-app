@@ -49,51 +49,47 @@ export default function ({ navigation }) {
       <ScrollView style={{ padding: 10 }}>
         {announcements.map((announcement) => {
           return (
-            <View
-              key={announcement.id}
+            <Pressable key={announcement.id}
+              onPress={() =>
+                navigation.navigate("announcement", {
+                  announcementId: announcement.id,
+                })
+              }
               style={{
-                padding: 20,
-                backgroundColor: "white",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 10,
-                borderRadius: 10,
+                backgroundColor: Colors.accent,
+                padding: 5,
+                borderRadius: 15,
               }}
             >
-              <View>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    textTransform: "capitalize",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {announcement.title}
-                </Text>
-                <Text style={{ fontSize: 10, color: "gray" }}>
-                  Date Posted : {formatDate(announcement.created_at)}
-                </Text>
-              </View>
-
-              <Pressable
-                onPress={() =>
-                  navigation.navigate("announcement", {
-                    announcementId: announcement.id,
-                  })
-                }
+              <View
+               
                 style={{
-                  backgroundColor: Colors.accent,
-                  padding: 10,
-                  borderRadius: 20,
+                  padding: 20,
+                  backgroundColor: "white",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 10,
+                  borderRadius: 10,
                 }}
               >
-                <Text style={{ fontSize: 10, color: Colors.base }}>
-                  Read More
-                </Text>
-              </Pressable>
-            </View>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      textTransform: "capitalize",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {announcement.title}
+                  </Text>
+                  <Text style={{ fontSize: 10, color: "gray" }}>
+                    Date Posted : {formatDate(announcement.created_at)}
+                  </Text>
+                </View>
+              </View>
+            </Pressable>
           );
         })}
       </ScrollView>

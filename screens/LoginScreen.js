@@ -58,7 +58,7 @@ export default function ({ navigation }) {
           source={require("./../assets/splash.png")}
           style={{ height: 100, width: 100 }}
         ></Image>
-        <Text style={{ fontWeight: 400, fontSize: 20 }}>ITCS Department</Text>
+        <Text style={{ fontWeight: 400, fontSize: 15, textAlign : "center" }}>Computer Studies Department, CvSU Bacoor City Campus Event Scheduling</Text>
       </View>
 
       <FormTextInput
