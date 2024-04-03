@@ -40,3 +40,22 @@ export async function logout() {
   await setToken(null)
   return message;
 }
+
+export async function getCourses(){
+  
+  const { data } = await axios.get('/course');
+
+
+  return data;
+
+}
+
+
+export async function getCoursesSection(course){
+  
+  const { data } = await axios.get(`/course/${course}/sections`);
+
+
+  return data;
+
+}

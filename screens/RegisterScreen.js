@@ -9,8 +9,9 @@ import {
 import SelectDropDown from "react-native-select-dropdown";
 import Colors from "../constants/Colors";
 import FormTextInput from "../components/FormTextInput";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { getCourses, getCoursesSection } from "../services/authService";
 
 export default function ({ navigation }) {
   const [credential, setCredential] = useState({
@@ -30,6 +31,8 @@ export default function ({ navigation }) {
   });
 
   const [errors, setErrors] = useState({});
+  const [courses, setCourses] = useState([]);
+  const [sections, setSections] = useState([]);
 
   const genderSelection = [{ name: "Male" }, { name: "Female" }];
 
@@ -46,7 +49,7 @@ export default function ({ navigation }) {
 
       Alert.alert("Register Success", response.data.message);
 
-      navigation.navigate('login')
+      navigation.navigate("login");
     } catch (error) {
       if (error.response?.status === 422) {
         setErrors(error.response.data.error);
@@ -57,6 +60,42 @@ export default function ({ navigation }) {
       }
     }
   };
+
+  const getSectionsByCourse = async (name) => {
+    try {
+      const response = await getCoursesSection(name);
+
+      setSections(response.sections);
+
+      console.log("====================================");
+      console.log(response.sections);
+      console.log("====================================");
+    } catch (error) {
+      console.log("====================================");
+      console.log(error);
+      console.log("====================================");
+    }
+  };
+
+  useEffect(() => {
+    async function runEffect() {
+      try {
+        const response = await getCourses();
+
+        setCourses(response.courses);
+
+        console.log("====================================");
+        console.log(response);
+        console.log("====================================");
+      } catch (error) {
+        console.log("====================================");
+        console.log(error);
+        console.log("====================================");
+      }
+    }
+
+    runEffect();
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
@@ -172,7 +211,51 @@ export default function ({ navigation }) {
         }
         errors={errors.student_id}
       />
-      <FormTextInput
+
+      <View style={{ padding: 10 }}>
+        <Text>Course</Text>
+        <SelectDropDown
+          data={courses}
+          onSelect={(selectedItem, index) => {
+            setCredential({
+              ...credential,
+              course: selectedItem.name,
+            });
+            getSectionsByCourse(selectedItem.name);
+          }}
+          renderButton={(selectedItem, isOpened) => {
+            return (
+              <View style={styles.dropdownButtonStyle}>
+                <Text style={styles.dropdownButtonTxtStyle}>
+                  {selectedItem?.name}
+                </Text>
+              </View>
+            );
+          }}
+          renderItem={(item, index, isSelected) => {
+            return (
+              <View
+                style={{
+                  ...styles.dropdownItemStyle,
+                  ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                }}
+              >
+                <Text style={styles.dropdownItemTxtStyle}>{item.name}</Text>
+              </View>
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+          dropdownStyle={styles.dropdownMenuStyle}
+        />
+
+        {errors?.gender?.map((error) => {
+          return (
+            <Text style={{ color: Colors.error, fontSize: 10 }}>{error}</Text>
+          );
+        })}
+      </View>
+
+      {/* <FormTextInput
         label="Course"
         keyBoardType="text"
         onChangeText={(text) =>
@@ -182,18 +265,52 @@ export default function ({ navigation }) {
           })
         }
         errors={errors.course}
-      />
-      <FormTextInput
-        label="Section"
-        keyBoardType="text"
-        onChangeText={(text) =>
-          setCredential({
-            ...credential,
-            section: text,
-          })
-        }
-        errors={errors.section}
-      />
+      /> */}
+
+      <View style={{ padding: 10 }}>
+        <Text>Section</Text>
+        <SelectDropDown
+          data={sections}
+          onSelect={(selectedItem, index) => {
+            setCredential({
+              ...credential,
+              section: selectedItem.id,
+            });
+          }}
+          renderButton={(selectedItem, isOpened) => {
+            return (
+              <View style={styles.dropdownButtonStyle}>
+                <Text style={styles.dropdownButtonTxtStyle}>
+                  {selectedItem?.year} - {selectedItem?.number}
+                </Text>
+              </View>
+            );
+          }}
+          renderItem={(item, index, isSelected) => {
+            return (
+              <View
+                style={{
+                  ...styles.dropdownItemStyle,
+                  ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                }}
+              >
+                <Text style={styles.dropdownItemTxtStyle}>
+                  {item?.year} - {item?.number}
+                </Text>
+              </View>
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+          dropdownStyle={styles.dropdownMenuStyle}
+        />
+
+        {errors?.gender?.map((error) => {
+          return (
+            <Text style={{ color: Colors.error, fontSize: 10 }}>{error}</Text>
+          );
+        })}
+      </View>
+
       <FormTextInput
         label="Display Name"
         keyBoardType="text"

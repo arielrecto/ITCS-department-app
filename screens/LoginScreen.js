@@ -105,6 +105,7 @@ export default function ({ navigation }) {
             flexDirection: "row",
             gap: 10,
             marginTop: 10,
+            justifyContent : "center"
           }}
         >
           <Text>Don't Have Account</Text>

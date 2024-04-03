@@ -6,8 +6,8 @@ export default function () {
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <View>
           <Image source={require("./../assets/icon.png")} />
-          <Text style={{alignItems : "center", fontWeight : 500, width : "100%"}}>Loading....</Text>
         </View>
+        <Text style={{ textAlign : "center", fontWeight : 500, marginTop : 5}}>Loading....</Text>
       </View>
     </>
   );
