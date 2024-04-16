@@ -8,7 +8,7 @@ import {
   TextInput,
   useWindowDimensions,
   Pressable,
-  Alert
+  Alert,
 } from "react-native";
 import {
   getEventData,
@@ -108,6 +108,29 @@ export default function EventDetailsScreen({ route }) {
       );
     }
 
+    if (data.event_is_done) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "#d4d4d4",
+            padding: 20,
+            borderRadius: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 10,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+           Event is Ended
+          </Text>
+        </View>
+      );
+    }
+
     const evaluationForm = eventData.evaluation_form;
     const form = JSON.parse(evaluationForm.form);
 
@@ -140,7 +163,7 @@ export default function EventDetailsScreen({ route }) {
                   {renderRadioButton(field)}
                 </View>
               ) : (
-                <View style={{marginBottom : 10}}>
+                <View style={{ marginBottom: 10 }}>
                   <TextInput
                     style={{
                       borderWidth: 1,
@@ -321,12 +344,12 @@ export default function EventDetailsScreen({ route }) {
 
       Alert.alert("Form Submit", response.message);
 
-
-      const event = await getEventData(eventId)
+      const event = await getEventData(eventId);
 
       setData(event);
-
     } catch (error) {
+
+      Alert.alert("Bad Request",error.response.data.message);
       console.log("====================================");
       console.log(error.response.data);
       console.log("====================================");
@@ -460,35 +483,34 @@ export default function EventDetailsScreen({ route }) {
           Speaker/Host Information
         </Text>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={{ gap: 5, padding: 10 }}>
-            <Text style={{ fontWeight: "bold" }}>Last Name</Text>
-            <Text style={{ fontSize: 12 }}>{data.event.speaker.last_name}</Text>
-          </View>
-          <View style={{ gap: 5, padding: 10 }}>
-            <Text style={{ fontWeight: "bold" }}>First Name</Text>
-            <Text style={{ fontSize: 12 }}>
-              {data.event.speaker.first_name}
-            </Text>
-          </View>
-          <View style={{ gap: 5, padding: 10 }}>
-            <Text style={{ fontWeight: "bold" }}>Middle Name</Text>
-            <Text style={{ fontSize: 12 }}>
-              {data.event.speaker.middle_name}
-            </Text>
-          </View>
-        </View>
-
-        <View style={{ gap: 5, padding: 10 }}>
-          <Text style={{ fontWeight: "bold" }}>Occupation</Text>
-          <Text style={{ fontSize: 12 }}>{data.event.speaker.occupation}</Text>
-        </View>
+        {data.event.hosts.map((host) => (
+          <>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ gap: 5, padding: 10 }}>
+                <Text style={{ fontWeight: "bold" }}>Last Name</Text>
+                <Text style={{ fontSize: 12 }}>{host.speaker.last_name}</Text>
+              </View>
+              <View style={{ gap: 5, padding: 10 }}>
+                <Text style={{ fontWeight: "bold" }}>First Name</Text>
+                <Text style={{ fontSize: 12 }}>{host.speaker.first_name}</Text>
+              </View>
+              <View style={{ gap: 5, padding: 10 }}>
+                <Text style={{ fontWeight: "bold" }}>Middle Name</Text>
+                <Text style={{ fontSize: 12 }}>{host.speaker.middle_name}</Text>
+              </View>
+            </View>
+            <View style={{ gap: 5, padding: 10 }}>
+              <Text style={{ fontWeight: "bold" }}>Occupation</Text>
+              <Text style={{ fontSize: 12 }}>{host.speaker.occupation}</Text>
+            </View>
+          </>
+        ))}
 
         <View style={{ padding: 10 }}>
           <Text

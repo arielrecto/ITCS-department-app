@@ -41,6 +41,22 @@ export default function ({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
+      <View style={{ padding: 10 }}>
+        <Pressable
+          onPress={() => { navigation.navigate('Scanner') }}
+          style={{
+            padding: 10,
+            backgroundColor: Colors.secondary,
+            width: 60,
+            display: "flex",
+            alignItems: "center",
+            borderRadius : 10
+          }}
+        >
+          <IonIcon name="scan" size={30} />
+        </Pressable>
+      </View>
+
       <Pressable
         onPress={() => {
           navigation.navigate("announcements");

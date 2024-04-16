@@ -14,6 +14,7 @@ import { Pressable, Text, Alert } from "react-native";
 import MaterialICon from "react-native-vector-icons/MaterialIcons";
 import AnnouncementListScreen from "./screens/AnnouncementListScreen";
 import AnnouncementScreen from "./screens/AnnouncementScreen";
+import QrScannerScreen from "./screens/QrScannerScreen";
 
 export default function App() {
   const [user, setUser] = useState();
@@ -120,6 +121,19 @@ export default function App() {
                 component={AnnouncementScreen}
                 options={{
                   title : "Announcement",
+                  headerRight: () => (
+                    <Pressable onPress={() => logoutAction()}>
+                      <MaterialICon name="logout" size={22} />
+                    </Pressable>
+                  ),
+                }}
+              />
+              
+              <Stack.Screen 
+                name="Scanner"
+                component={QrScannerScreen}
+                options={{
+                  title : "QR Scanner",
                   headerRight: () => (
                     <Pressable onPress={() => logoutAction()}>
                       <MaterialICon name="logout" size={22} />

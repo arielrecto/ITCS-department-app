@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { ScrollView, Text, View, useWindowDimensions } from "react-native";
+import {
+  ScrollView,
+  Text,
+  View,
+  useWindowDimensions,
+  FlatList,
+  Image,
+} from "react-native";
 import { getAnnouncement } from "../services/announcementService";
 import RenderHTML from "react-native-render-html";
 import formatDate from "../utils/formatDate";
@@ -44,6 +51,9 @@ export default function ({ route }) {
     );
   }
 
+  console.log("====================================");
+  console.log(announcement.images);
+  console.log("====================================");
   return (
     <>
       <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
@@ -72,11 +82,27 @@ export default function ({ route }) {
           >
             Date Posted :{formatDate(announcement.created_at)}
           </Text>
-          <View style={{ padding: 10, backgroundColor: "#d4d4d4", borderRadius : 10}}>
+          <View
+            style={{
+              padding: 10,
+              backgroundColor: "#d4d4d4",
+              borderRadius: 10,
+            }}
+          >
             <RenderHTML
               source={{ html: announcement.description }}
               contentWidth={width}
             />
+          </View>
+
+          <View style={{display : "flex", gap : 5}}>
+            {announcement.images.map((image, index) => (
+              <Image
+                key={index} // Make sure to add a unique key for each image
+                source={{ uri: image.url }}
+                style={{ width: "100%", aspectRatio: 16 / 9 }} // Adjust aspectRatio as per your need
+              />
+            ))}
           </View>
         </View>
       </ScrollView>
