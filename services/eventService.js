@@ -43,3 +43,22 @@ export async function submitEventEvaluation (ref, data){
 
     return message;
 }
+
+
+export async function attendance(ref){
+    const token = await getToken();
+
+
+    const data = {
+        'sample' : 'hello'
+    }
+
+    const {data : message} =  await axios.post(`/event/rf=${ref}/attendance`, data, {
+        headers : {
+            Authorization : `Bearer ${token}`
+        }
+    })
+
+
+    return message;
+}

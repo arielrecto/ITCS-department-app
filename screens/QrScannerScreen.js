@@ -8,6 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { attendance } from "../services/eventService";
 
 export default function () {
   const [hasPermission, setHasPermission] = useState(null);
@@ -22,10 +23,30 @@ export default function () {
     getBarCodeScannerPermissions();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    setScannedData(data);
+      await submitAttendance(data)
   };
+
+  const submitAttendance = async (ref) => {
+
+    try {
+
+  
+
+       const response = await attendance(ref);
+
+      setScannedData(response.message)
+      console.log('====================================');
+      console.log(response);
+      console.log('====================================');
+      
+    } catch (error) {
+      console.log('====================================');
+      console.log(error.response.data);
+      console.log('====================================');
+    }
+  }
 
   return (
     <>
@@ -46,10 +67,9 @@ export default function () {
         {!scannedData ? (
           <Text style={{fontWeight : "bold"}}>No Result</Text>
         ) : (
-          <Pressable style={{padding : 5, display : "flex", flexDirection : "row", gap : 10}} onPress={() => Linking.openURL(scannedData)}>
-            <Text style={{fontWeight : "bold"}}>Go to: </Text>
-            <Text style={{color : "blue", textDecorationLine : "underline"}}>{scannedData}</Text>
-          </Pressable>
+        
+            <Text>{scannedData}</Text>
+      
         )}
       </View>
     </>
