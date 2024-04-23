@@ -20,6 +20,8 @@ import formatDateWithoutHours from "../utils/formatDateWithoutHours";
 import RenderHTML from "react-native-render-html";
 import FontAwesomeSix from "react-native-vector-icons/FontAwesome6";
 import RadioButtonsGroup from "react-native-radio-buttons-group";
+import { getItem } from "expo-secure-store";
+import evaluationResult from "../utils/evaluationResult";
 
 export default function EventDetailsScreen({ route }) {
   const { eventId } = route.params;
@@ -125,12 +127,15 @@ export default function EventDetailsScreen({ route }) {
               textAlign: "center",
             }}
           >
-           Event is Ended
+            Event is Ended
           </Text>
         </View>
       );
     }
 
+    console.log("====================================");
+    console.log("evaluation data init:", evaluationData);
+    console.log("====================================");
     const evaluationForm = eventData.evaluation_form;
     const form = JSON.parse(evaluationForm.form);
 
@@ -160,7 +165,7 @@ export default function EventDetailsScreen({ route }) {
                     gap: 4,
                   }}
                 >
-                  {renderRadioButton(field)}
+                  {renderRadioButton(field, "default")}
                 </View>
               ) : (
                 <View style={{ marginBottom: 10 }}>
@@ -173,10 +178,37 @@ export default function EventDetailsScreen({ route }) {
                       marginTop: 10,
                     }}
                     placeholder="feed back"
-                    onChangeText={(text) => handleInputText(field, text)}
+                    onChangeText={(text) =>
+                      handleInputText(field, text, "default")
+                    }
                   />
                 </View>
               )}
+            </View>
+          );
+        })}
+
+        {form.speakers.map((speaker, index) => {
+          let parentId = index + 1;
+          return (
+            <View key={index}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                }}
+              >
+                Host : {speaker.name}
+              </Text>
+
+              {speaker.fields.map((field, index) => {
+                return (
+                  <View key={index}>
+                    <Text>{field.question}</Text>
+                    {renderRadioButton(field, `p-${parentId}`)}
+                  </View>
+                );
+              })}
             </View>
           );
         })}
@@ -203,7 +235,7 @@ export default function EventDetailsScreen({ route }) {
     );
   };
 
-  const handleInputRadio = (field, selectedValue) => {
+  const handleInputRadio = (field, selectedValue, parentLocalId) => {
     setSelectedRadioValues((prevState) => ({
       ...prevState,
       [field.localId]: selectedValue,
@@ -237,11 +269,12 @@ export default function EventDetailsScreen({ route }) {
       {
         ...field,
         data: selectedValue,
+        groupName: parentLocalId,
       },
     ]);
   };
 
-  const handleInputText = (field, textValue) => {
+  const handleInputText = (field, textValue, parentLocalId) => {
     const fieldExist = evaluationData.find(
       (item) => item.localId === field.localId
     );
@@ -256,6 +289,7 @@ export default function EventDetailsScreen({ route }) {
         {
           ...field,
           data: textValue,
+          groupName: parentLocalId,
         },
       ]);
 
@@ -275,7 +309,7 @@ export default function EventDetailsScreen({ route }) {
     ]);
   };
 
-  const renderRadioButton = (radioData) => {
+  const renderRadioButton = (radioData, parentLocalId) => {
     let radioButtons = [];
     for (let i = 1; i <= radioData.radio_max; i++) {
       radioButtons = [
@@ -294,14 +328,16 @@ export default function EventDetailsScreen({ route }) {
       <RadioButtonsGroup
         radioButtons={radioButtons}
         color={Colors.neutral}
-        onPress={(selectedValue) => handleInputRadio(radioData, selectedValue)}
+        onPress={(selectedValue) =>
+          handleInputRadio(radioData, selectedValue, parentLocalId)
+        }
         selectedId={selectedId}
       />
     );
   };
 
   const calculateAverage = () => {
-    let numberRadio = 1;
+
     const total = evaluationData.reduce((sum, data) => {
       if (data.input_type !== "text") {
         const numericValue = parseFloat(data.data);
@@ -310,11 +346,19 @@ export default function EventDetailsScreen({ route }) {
         }
       }
 
-      numberRadio += 1;
+ 
       return sum;
     }, 0);
 
-    const average = total / numberRadio;
+    const totalItemRadio = evaluationData.filter((item) => item.input_type !== 'text');
+
+
+
+    const average = Number(total / totalItemRadio.length).toFixed(2);
+
+    console.log('====================================');
+    console.log('average', average, total, "totalITem", totalItemRadio.length );
+    console.log('====================================');
     return average;
   };
 
@@ -325,20 +369,52 @@ export default function EventDetailsScreen({ route }) {
   const submitEvaluation = async () => {
     try {
       const average = calculateAverage();
+      const defaultFields = evaluationData.filter(
+        (item) => item.groupName === "default"
+      );
+
       const evaForm = {
         ...data.event.evaluation_form,
         form: {
           ...JSON.parse(data.event.evaluation_form.form),
-          fields: [...evaluationData],
+          fields: [
+            ...defaultFields,
+          ],
         },
       };
+
+      const speakers = evaForm.form.speakers.map((speaker, index) => {
+        speaker.fields = [
+          ...evaluationData.filter(
+            (item) => item.groupName === `p-${index + 1}`
+          ),
+        ];
+        return speaker;
+      })
+
+
+      evaForm.form.speakers = [...speakers]
+
+  
+
+  
+
+      // console.log("====================================");
+      // console.log(JSON.stringify(evaForm));
+      // console.log("====================================");
 
       const dataContext = {
         form: evaForm,
         average: average,
-        result: "result",
+        result : evaluationResult(average),
         event_id: data.event.id,
       };
+
+
+      console.log('====================================');
+      console.log(dataContext);
+      console.log('====================================');
+     
 
       const response = await submitEventEvaluation(data.event.ref, dataContext);
 
@@ -348,11 +424,14 @@ export default function EventDetailsScreen({ route }) {
 
       setData(event);
     } catch (error) {
-
-      Alert.alert("Bad Request",error.response.data.message);
       console.log("====================================");
-      console.log(error.response.data);
+      console.log(error);
       console.log("====================================");
+      console.log("====================================");
+      console.log(error.response?.data);
+      console.log("====================================");
+      Alert.alert("Bad Request", error.response?.data.message);
+     
     }
   };
 
@@ -464,10 +543,10 @@ export default function EventDetailsScreen({ route }) {
         <View style={{ gap: 5, padding: 10 }}>
           <Text style={{ fontWeight: "bold" }}>Address</Text>
           <Text style={{ fontSize: 12 }}>{location.address}</Text>
-          <RenderHTML
+          {/* <RenderHTML
             source={{ html: data.event.description }}
             contentWidth={width}
-          />
+          /> */}
         </View>
 
         <View style={{ gap: 5, padding: 10 }}>

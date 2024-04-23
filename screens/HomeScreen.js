@@ -13,6 +13,7 @@ import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import { useState, useEffect } from "react";
 import { getData } from "../services/dashboardServices";
 import RenderHTML from "react-native-render-html";
+import formatDate from "../utils/formatDate";
 
 export default function ({ navigation }) {
   const [dashboard, setDashboard] = useState();
@@ -43,14 +44,16 @@ export default function ({ navigation }) {
     <ScrollView style={styles.container}>
       <View style={{ padding: 10 }}>
         <Pressable
-          onPress={() => { navigation.navigate('Scanner') }}
+          onPress={() => {
+            navigation.navigate("Scanner");
+          }}
           style={{
             padding: 10,
             backgroundColor: Colors.secondary,
             width: 60,
             display: "flex",
             alignItems: "center",
-            borderRadius : 10
+            borderRadius: 10,
           }}
         >
           <IonIcon name="scan" size={30} />
@@ -96,26 +99,24 @@ export default function ({ navigation }) {
 
       <View style={styles.contentSection}>
         <Text style={styles.contentSectionTitle}>Latest Announcement</Text>
-        <View style={styles.content}>
-          <Text style={styles.contentTitle}>
-            {dashboard?.latest_announcement?.title}
-          </Text>
-          <Text style={{ textAlign: "right", fontSize: 5, marginTop: 5 }}>
-            Date Posted : {dashboard?.latest_announcement?.created_at}
-          </Text>
-          {/* <Text>
-            {dashboard?.latest_announcement?.description}
-          </Text> */}
 
-          {latestAnnouncementDescription ? (
+        {latestAnnouncementDescription ? (
+          <View style={styles.content}>
+            <Text style={styles.contentTitle}>
+              {dashboard?.latest_announcement?.title}
+            </Text>
+            <Text style={{ textAlign: "right", fontSize: 5, marginTop: 5 }}>
+              Date Posted :{" "}
+              {formatDate(dashboard?.latest_announcement?.created_at)}
+            </Text>
             <RenderHTML
               source={{ html: latestAnnouncementDescription }}
               contentWidth={width}
             />
-          ) : (
-            <Text>No announcement available</Text>
-          )}
-        </View>
+          </View>
+        ) : (
+          <Text style={{textAlign : "center", padding : 5}}>No announcement available</Text>
+        )}
       </View>
     </ScrollView>
   );
