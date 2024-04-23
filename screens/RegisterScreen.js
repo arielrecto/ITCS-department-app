@@ -5,6 +5,8 @@ import {
   Pressable,
   ScrollView,
   Alert,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import SelectDropDown from "react-native-select-dropdown";
 import Colors from "../constants/Colors";
@@ -12,6 +14,8 @@ import FormTextInput from "../components/FormTextInput";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { getCourses, getCoursesSection } from "../services/authService";
+import * as ImagePicker from "expo-image-picker";
+import { FileSystem } from 'expo';
 
 export default function ({ navigation }) {
   const [credential, setCredential] = useState({
@@ -33,6 +37,7 @@ export default function ({ navigation }) {
   const [errors, setErrors] = useState({});
   const [courses, setCourses] = useState([]);
   const [sections, setSections] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const genderSelection = [{ name: "Male" }, { name: "Female" }];
 
@@ -40,7 +45,7 @@ export default function ({ navigation }) {
     try {
       setErrors({});
       console.log("====================================");
-      console.log("hello");
+      console.log(credential);
       console.log("====================================");
       const response = await axios.post(
         "https://live.itcsdept.com/api/mobile/student",
@@ -96,6 +101,35 @@ export default function ({ navigation }) {
 
     runEffect();
   }, []);
+
+  const openImagePicker = async () => {
+    let getPermission = await ImagePicker.getCameraPermissionsAsync();
+    if (getPermission.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      quality: 1,
+      base64 : true,
+    });
+
+    if (pickerResult.cancelled === true) return;
+
+    console.log("====================================");
+    console.log(pickerResult);
+    console.log("====================================");
+
+
+    setCredential({
+      ...credential,
+      valid_documents : pickerResult.assets[0].base64
+    });
+
+
+    setSelectedImage(pickerResult);
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -309,6 +343,29 @@ export default function ({ navigation }) {
             <Text style={{ color: Colors.error, fontSize: 10 }}>{error}</Text>
           );
         })}
+      </View>
+
+      <View style={{ padding: 10 }}>
+        {selectedImage ? (
+          <Image
+            source={{ uri: selectedImage.assets[0].uri }}
+            style={{ height: 300, width: 300 }}
+            onError={(error) => console.error("Error loading image:", error)}
+          />
+        ) : (
+          <Text>Document</Text>
+        )}
+
+        <TouchableOpacity
+          onPress={() => openImagePicker()}
+          style={{
+            padding: 10,
+            backgroundColor: Colors.accent,
+            borderRadius: 10,
+          }}
+        >
+          <Text style={{ color: "white" }}>Upload Document</Text>
+        </TouchableOpacity>
       </View>
 
       <FormTextInput
