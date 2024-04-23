@@ -15,6 +15,8 @@ import MaterialICon from "react-native-vector-icons/MaterialIcons";
 import AnnouncementListScreen from "./screens/AnnouncementListScreen";
 import AnnouncementScreen from "./screens/AnnouncementScreen";
 import QrScannerScreen from "./screens/QrScannerScreen";
+import AttendancesListScreen from "./screens/AttendancesListScreen";
+import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 
 export default function App() {
   const [user, setUser] = useState();
@@ -141,6 +143,18 @@ export default function App() {
                   ),
                 }}
               />
+               <Stack.Screen 
+                name="Attendances"
+                component={AttendancesListScreen}
+                options={{
+                  title : "Attendance History",
+                  headerRight: () => (
+                    <Pressable onPress={() => logoutAction()}>
+                      <MaterialICon name="logout" size={22} />
+                    </Pressable>
+                  ),
+                }}
+              />
 
               
             </>
@@ -156,6 +170,13 @@ export default function App() {
               <Stack.Screen
                 name="register"
                 component={RegisterScreen}
+                options={{
+                  headerShown: false,
+                }}
+              />
+               <Stack.Screen
+                name="forgot-password"
+                component={ForgotPasswordScreen}
                 options={{
                   headerShown: false,
                 }}

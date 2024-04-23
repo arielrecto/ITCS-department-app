@@ -58,7 +58,9 @@ export default function ({ navigation }) {
           source={require("./../assets/splash.png")}
           style={{ height: 100, width: 100 }}
         ></Image>
-        <Text style={{ fontWeight: 400, fontSize: 15, textAlign : "center" }}>Computer Studies Department, CvSU Bacoor City Campus Event Scheduling</Text>
+        <Text style={{ fontWeight: 400, fontSize: 15, textAlign: "center" }}>
+          Computer Studies Department, CvSU Bacoor City Campus Event Scheduling
+        </Text>
       </View>
 
       <FormTextInput
@@ -105,7 +107,7 @@ export default function ({ navigation }) {
             flexDirection: "row",
             gap: 10,
             marginTop: 10,
-            justifyContent : "center"
+            justifyContent: "center",
           }}
         >
           <Text>Don't Have Account</Text>
@@ -116,6 +118,25 @@ export default function ({ navigation }) {
           >
             <Text style={{ fontWeight: "bold", color: Colors.accent }}>
               Sign Up
+            </Text>
+          </Pressable>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            gap: 10,
+            marginTop: 10,
+            justifyContent: "center",
+          }}
+        >
+          <Pressable
+            onPress={() => {
+              navigation.navigate("forgot-password");
+            }}
+          >
+            <Text style={{ color: Colors.accent }}>
+              Forgot Password
             </Text>
           </Pressable>
         </View>

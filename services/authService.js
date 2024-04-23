@@ -59,3 +59,10 @@ export async function getCoursesSection(course){
   return data;
 
 }
+
+
+export async function forgotPassword(_email){
+
+  const { data } = await axios.post(`/forgot-password`, _email);
+
+}

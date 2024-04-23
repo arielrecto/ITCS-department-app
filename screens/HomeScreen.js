@@ -5,6 +5,7 @@ import {
   View,
   useWindowDimensions,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import Colors from "./../constants/Colors";
 import Card from "../components/Card";
@@ -115,9 +116,31 @@ export default function ({ navigation }) {
             />
           </View>
         ) : (
-          <Text style={{textAlign : "center", padding : 5}}>No announcement available</Text>
+          <Text style={{ textAlign: "center", padding: 5 }}>
+            No announcement available
+          </Text>
         )}
       </View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Attendances");
+        }}
+      >
+        <View style={{ padding: 10 }}>
+          <Text
+            style={{
+              backgroundColor: Colors.secondary,
+              fontWeight: "bold",
+              fontSize: 20,
+              textAlign: "center",
+              paddingVertical: 20,
+              borderRadius : 40
+            }}
+          >
+            Attendance Record
+          </Text>
+        </View>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
