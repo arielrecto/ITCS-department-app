@@ -132,6 +132,28 @@ export default function EventDetailsScreen({ route }) {
         </View>
       );
     }
+    if (!data.user_has_attendance) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "#d4d4d4",
+            padding: 20,
+            borderRadius: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 10,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            Attendance First
+          </Text>
+        </View>
+      );
+    }
 
     console.log("====================================");
     console.log("evaluation data init:", evaluationData);
@@ -152,6 +174,14 @@ export default function EventDetailsScreen({ route }) {
         >
           {form.title}
         </Text>
+        <View style={{display : "flex", alignContent : "center", flexDirection : "row",  flexWrap : "wrap", gap : 2, justifyContent : "space-between"}}>
+                <Text style={{fontSize : 10}}>1 - much less than expected</Text>
+                <Text style={{fontSize : 10}}>2 - less than expected</Text>
+                <Text style={{fontSize : 10}}>3 - matched expectations</Text>
+                <Text style={{fontSize : 10}}>4 - exceeded expectations</Text>
+                <Text style={{fontSize : 10}}>5 - greatly exceeded</Text>
+          </View>
+
 
         {form.fields.map((field) => {
           return (
@@ -597,7 +627,7 @@ export default function EventDetailsScreen({ route }) {
           >
             Evaluation Form
           </Text>
-
+        
           {renderEvaluationForm(data.event)}
         </View>
       </ScrollView>

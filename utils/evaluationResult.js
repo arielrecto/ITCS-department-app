@@ -12,7 +12,7 @@ export default function evaluationResult(average) {
         result = "matched expectations"
         return result;
     }else if( average >= 2 && average < 3){
-        result = "less thanexpected"
+        result = "less than expected"
         return result;
     }
     return result;
