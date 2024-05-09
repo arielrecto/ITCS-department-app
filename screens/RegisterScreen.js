@@ -173,7 +173,7 @@ export default function ({ navigation }) {
       />
       <FormTextInput
         label="Age"
-        keyBoardType="numeric"
+        keyboardType="numeric"
         onChangeText={(text) =>
           setCredential({
             ...credential,
@@ -236,7 +236,7 @@ export default function ({ navigation }) {
       />
       <FormTextInput
         label="Student ID"
-        keyBoardType="text"
+        keyboardType="numeric"
         onChangeText={(text) =>
           setCredential({
             ...credential,

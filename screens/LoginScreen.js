@@ -7,24 +7,33 @@ import {
   Pressable,
   Alert,
 } from "react-native";
+import { useContext } from "react";
 import Colors from "../constants/Colors";
 import FormTextInput from "../components/FormTextInput";
 import { useState } from "react";
 import { login } from "./../services/authService";
+import AuthContext from "./../contexts/AuthContext";
 
-export default function ({ navigation }) {
+export default function ({ navigation}) {
   const [credential, setCredential] = useState({
     email: "",
     password: "",
   });
+  const { user, setUser } = useContext(AuthContext);
+
+
 
   const [errors, setErrors] = useState({});
 
   const loginHandle = async () => {
     setErrors({});
     try {
-      console.log(navigation);
-      await login(credential);
+      const response = await login(credential);
+
+      console.log(response);
+      Alert.alert(`${response.message}`);
+      setUser(response.user)
+      navigation.navigate("home");
     } catch (error) {
       if (error.response?.status === 422) {
         setErrors(error.response.data.error);
@@ -135,9 +144,7 @@ export default function ({ navigation }) {
               navigation.navigate("forgot-password");
             }}
           >
-            <Text style={{ color: Colors.accent }}>
-              Forgot Password
-            </Text>
+            <Text style={{ color: Colors.accent }}>Forgot Password</Text>
           </Pressable>
         </View>
       </View>

@@ -8,6 +8,8 @@ export async function login(credentials) {
 
    
   await setToken(data.token);
+
+  return data;
   
 }
 
