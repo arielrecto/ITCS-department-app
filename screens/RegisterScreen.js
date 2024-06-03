@@ -17,6 +17,7 @@ import { getCourses, getCoursesSection } from "../services/authService";
 import * as ImagePicker from "expo-image-picker";
 import { FileSystem } from 'expo';
 
+
 export default function ({ navigation }) {
   const [credential, setCredential] = useState({
     last_name: "",
@@ -40,7 +41,10 @@ export default function ({ navigation }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const genderSelection = [{ name: "Male" }, { name: "Female" }];
+  const [passwordIsMatch, setPasswordIsMatch] = useState('');
+  const [isDisplayMatch, setIsDisplayMatch] = useState(false);
 
+  
   const registerHandler = async () => {
     try {
       setErrors({});
@@ -101,6 +105,21 @@ export default function ({ navigation }) {
 
     runEffect();
   }, []);
+
+  useEffect(() => {
+    if(credential.password_confirmation === "") return;
+  
+    setIsDisplayMatch(true);
+
+    if(credential.password !== credential.password_confirmation){
+      setPasswordIsMatch("Password Not Matched")
+      return
+    }
+
+    setPasswordIsMatch("Password is Matched")
+    
+  }, [credential.password_confirmation])
+
 
   const openImagePicker = async () => {
     let getPermission = await ImagePicker.getCameraPermissionsAsync();
@@ -369,7 +388,7 @@ export default function ({ navigation }) {
       </View>
 
       <FormTextInput
-        label="Display Name"
+        label="Name"
         keyBoardType="text"
         onChangeText={(text) =>
           setCredential({
@@ -401,6 +420,10 @@ export default function ({ navigation }) {
         }
         errors={errors.password}
       />
+
+      {
+        passwordIsMatch === "Password is Match" && isDisplayMatch ? <Text style={{fontSize : 10, color: "green", }}>{passwordIsMatch}</Text> : <Text style={{fontSize : 10, color: "red", }}>{passwordIsMatch}</Text> 
+      }
       <FormTextInput
         label="Confirm Password"
         secureTextEntry={true}
